@@ -3,6 +3,9 @@ import { Inter } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 import { locales } from "@/config";
+import { cn } from "@/lib/utils";
+import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/navbar/Navbar";
 // import { useTranslations } from "next-intl";
 
 const inter = Inter({
@@ -42,9 +45,24 @@ export default function LocaleLayout({ children, params: { locale } }: Props) {
   // const t = useTranslations("LocaleSwitcher");
 
   return (
-    <html lang={locale}>
-      <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+    <html suppressHydrationWarning lang={locale}>
+      <body
+        className={cn(
+          "bg-background min-h-screen font-sans antialiased",
+          inter.variable,
+        )}
+      >
+        <TRPCReactProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            {children}
+          </ThemeProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );
