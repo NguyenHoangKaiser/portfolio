@@ -2,7 +2,6 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { HamburgerMenuIcon, Cross1Icon } from "@radix-ui/react-icons";
-import { Button } from "../ui/button";
 
 const routes: { title: string; href: string }[] = [
   { title: "Features", href: "#features" },
@@ -10,7 +9,7 @@ const routes: { title: string; href: string }[] = [
   { title: "Pricing", href: "#pricing" },
 ];
 
-const Navbar: React.FC = () => {
+const Navbar: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -18,17 +17,17 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <div className="flex h-16 items-center justify-between px-6 lg:px-14">
+    <div className="flex h-16 items-center justify-between border-b px-6 lg:px-14">
       <div className="flex items-center">
         <Link href={"/"} className="shrink-0">
-          <h1 className="text-accent-foreground text-2xl font-bold">devlink</h1>
+          <h1 className="text-2xl font-bold text-accent-foreground">Home</h1>
         </Link>
-        <div className="bg-background hidden w-full justify-end gap-1 px-4 py-2 sm:flex">
+        <div className="hidden w-full justify-end gap-1 bg-background px-4 py-2 sm:flex">
           {routes.map((route, index) => (
             <Link
               key={index}
               href={route.href}
-              className={`hover:text-accent-foreground text-muted-foreground inline-flex h-10 w-full items-center px-4 py-2 text-sm transition-colors sm:w-auto`}
+              className={`inline-flex w-full items-center px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-accent-foreground sm:w-auto`}
             >
               {route.title}
             </Link>
@@ -36,20 +35,9 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      <div className="hidden items-center gap-2 sm:flex">
-        <Link href={"/login"} className="w-full sm:w-auto">
-          <Button variant="secondary" size="sm" className="w-full">
-            Log In
-          </Button>
-        </Link>
-        <Link href="/signup" className="w-full sm:w-auto">
-          <Button variant="default" size="sm" className="w-full">
-            Sign Up
-          </Button>
-        </Link>
-      </div>
+      {children}
 
-      {menuOpen && <MobileMenu toggleMenu={toggleMenu} />}
+      {menuOpen && <MobileMenu toggleMenu={toggleMenu}>{children}</MobileMenu>}
 
       <button onClick={toggleMenu} className="sm:hidden">
         {menuOpen ? (
@@ -62,42 +50,26 @@ const Navbar: React.FC = () => {
   );
 };
 
-const MobileMenu: React.FC<{ toggleMenu: () => void }> = ({ toggleMenu }) => {
+const MobileMenu: React.FC<{
+  toggleMenu: () => void;
+  children: React.ReactNode;
+}> = ({ toggleMenu, children }) => {
   return (
     <div className="absolute right-0 top-16 flex h-[calc(100vh-64px)] w-full flex-col">
-      <div className="bg-background  flex w-full grow flex-col gap-1 px-4 pb-2 sm:hidden">
+      <div className="flex  w-full grow flex-col gap-1 bg-background px-4 pb-2 sm:hidden">
         {routes.map((route, index) => (
           <Link
             key={index}
             href={route.href}
             onClick={toggleMenu}
-            className={`hover:text-accent-foreground text-muted-foreground inline-flex h-10 w-full items-center text-sm transition-colors sm:w-auto`}
+            className={`inline-flex h-10 w-full items-center text-sm text-muted-foreground transition-colors hover:text-accent-foreground sm:w-auto`}
           >
             {route.title}
           </Link>
         ))}
-        <Link href={"/login"} className="w-full sm:w-auto">
-          <Button
-            onClick={toggleMenu}
-            variant="secondary"
-            size="sm"
-            className="w-full"
-          >
-            Log In
-          </Button>
-        </Link>
-        <Link href="/signup" className="w-full sm:w-auto">
-          <Button
-            onClick={toggleMenu}
-            variant="default"
-            size="sm"
-            className="w-full"
-          >
-            Sign Up
-          </Button>
-        </Link>
+        {children}
       </div>
-      <div className="bg-background/60 h-screen w-full sm:hidden" />
+      <div className="h-screen w-full bg-background/60 sm:hidden" />
     </div>
   );
 };

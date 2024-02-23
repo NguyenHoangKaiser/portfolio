@@ -5,8 +5,6 @@ import { getTranslations, unstable_setRequestLocale } from "next-intl/server";
 import { locales } from "@/config";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/navbar/Navbar";
-// import { useTranslations } from "next-intl";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,13 +40,12 @@ export function generateStaticParams() {
 export default function LocaleLayout({ children, params: { locale } }: Props) {
   // Enable static rendering
   unstable_setRequestLocale(locale);
-  // const t = useTranslations("LocaleSwitcher");
 
   return (
     <html suppressHydrationWarning lang={locale}>
       <body
         className={cn(
-          "bg-background min-h-screen font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased",
           inter.variable,
         )}
       >
@@ -59,7 +56,6 @@ export default function LocaleLayout({ children, params: { locale } }: Props) {
             enableSystem
             disableTransitionOnChange
           >
-            <Navbar />
             {children}
           </ThemeProvider>
         </TRPCReactProvider>
