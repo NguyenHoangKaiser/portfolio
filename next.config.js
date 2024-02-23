@@ -8,6 +8,15 @@ const withNextIntl = createNextIntlPlugin();
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "tecdn.b-cdn.net",
+      },
+    ],
+  },
+};
 
 export default withNextIntl(config);
